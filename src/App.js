@@ -1,18 +1,19 @@
 import React, { useState} from 'react';
 import './App.css'
-// require('dotenv').config();
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 dotenv.config();
+
 function App() {
   
-  const apikey ='process.env.API_KEY';
+  const apikey = process.env.API_KEY;
+ 
   const [weatherData, setWeatherData] = useState([{}])
   const [city, setCity] = useState("")  
 
 
-  const getWeather = (event) => {
+  const getWeather = async (event) => {
     if (event.key == "Enter")
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&APPID=${apikey}`).then(
+    await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&APPID=${apikey}`).then(
       response =>response.json()
     ).then(
       data => {
