@@ -1,25 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState} from 'react';
+import './App.css'
+// require('dotenv').config();
+import dotenv from 'dotenv'
+dotenv.config();
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  
+  const apikey ='process.env.API_KEY';
+  const [weatherData, setWeatherData] = useState([{}])
+  const [city, setCity] = useState("")  
+
+
+  const getWeather = (event) => {
+    if (event.key == "Enter")
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&APPID=${apikey}`).then(
+      response =>response.json()
+    ).then(
+      data => {
+        setWeatherData(data)
+        setCity("")
+      }
+    )
+  }
+
+    return (
+      <div className="container">
+        <input 
+        className="input" 
+        placeholder="Location..."
+        onChange={e => setCity(e.target.value)}
+        value={city}
+        onKeyPress={getWeather}
+        />
+
+        {typeof weatherData.main === 'undefined' ? (
+          <div>
+            <p>Welcome to the Weather Wizrd!</p>
+          </div>
+        ):(
+          <div className='weather-data'>
+            <p className='city'>{weatherData.name}</p>
+            <p className='temp'>{Math.round(weatherData.main.temp)}&#8457;</p>
+            <p className='weather'>{weatherData.weather[0].main}</p>
+          </div>
+        )}
+
+        {weatherData.cod ==="404" ? (
+          <p>This City doesn't exist</p>
+        ) :(
+          <>
+          </>
+
+        )}
+
+      </div>
+    );
+  }
+
 
 export default App;
